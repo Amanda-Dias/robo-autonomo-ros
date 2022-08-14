@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+
+<launch>
+    <arg name="map_file" default="$(find trabalho)/maps/map.yaml" />
+    <arg name="gazebo_gui" default="true" />
+    <arg name="mouse_teleop" default="true" />
+
+    <include file="$(find trabalho)/launch/mundo.launch">
+	    <arg name="gazebo_gui" value="$(arg gazebo_gui)" />
+	</include>
+
+    <include file="$(find turtlebot3_navigation)/launch/turtlebot3_navigation.launch">
+	    <arg name="map_file" value="$(arg map_file)" />
+	</include>
+
+    <node if="$(arg mouse_teleop)" pkg="mouse_teleop" type="mouse_teleop.py" name="mouse_teleop">
+        <remap from="/mouse_vel" to="/cmd_vel" />
+        <param name="frequency" value="10" />
+    </node>
+    
+    <!-- Perfect fake localization could be achieved as below  mudei a partir daqui-->
+    <!-- <node pkg="map_server" type="map_server" name="map_server" args="$(find trabalho)/maps/    map.yaml" /> -->
+   <!--<node pkg="tf2_ros" type="static_transform_publisher" name="fake_localization" args="0.0 0.0 0.0 0.0 0.0 0.0 /map /odom" /> -->
+
+    <!-- Start move_base (global and local cost maps and path planners) -->
+   <!-- <node pkg="move_base" type="move_base" name="move_base" clear_params="true" output="screen"> -->
+        <!-- Top-level parameters -->
+     <!--   <rosparam command="load" file="$(find trabalho)/config/move_base/move_base.yaml" /> -->
+
+        <!-- Costmaps parameters -->
+      <!--  <rosparam ns="global_costmap" command="load" file="$(find trabalho)/config/move_base/costmap_common.yaml" />
+        <rosparam command="load" file="$(find trabalho)/config/move_base/costmap_global.yaml" />
+        <rosparam ns="local_costmap" command="load" file="$(find trabalho)/config/move_base/costmap_common.yaml" />
+        <rosparam command="load" file="$(find trabalho)/config/move_base/costmap_local.yaml" /> -->
+
+        <!-- Planners parameters -->
+       <!-- <rosparam command="load" file="$(find trabalho)/config/move_base/planner_global.yaml" />
+        <rosparam command="load" file="$(find trabalho)/config/move_base/planner_local.yaml" />
+    </node> 
+-->
+
+</launch>

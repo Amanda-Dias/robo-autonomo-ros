@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+
+<launch>
+    <arg name="rviz" default="true" />
+	<arg name="gazebo_gui" default="true" />
+    <arg name="mouse_teleop" default="true" />
+
+    <!-- Chama o launcher do mundo -->
+    <include file="$(find trabalho)/launch/mundo.launch">
+		<arg name="gazebo_gui" value="$(arg gazebo_gui)" />
+	</include>
+
+    <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher" />
+
+	<!-- Chama o launcher do Hector Slam -->
+    <include file="$(find turtlebot3_slam)/launch/turtlebot3_hector.launch">
+        <arg name="map_size" value="250"/>
+    </include>
+
+    <!-- Teleoperação com mouse -->
+    <node if="$(arg mouse_teleop)" pkg="mouse_teleop" type="mouse_teleop.py" name="mouse_teleop">
+        <remap from="/mouse_vel" to="/cmd_vel" />
+        <param name="frequency" value="10" />
+    </node>
+    
+    <!-- Inicializa o RVIZ -->
+    <node if="$(arg rviz)" pkg="rviz" type="rviz" name="rviz" args="-d $(find trabalho)/config/mapping.rviz" />
+   
+    <!-- Quando terminar de mapear, executar:
+    rosrun map_server map_saver -f `rospack find trabalho`/maps/map
+    -->
+
+</launch>

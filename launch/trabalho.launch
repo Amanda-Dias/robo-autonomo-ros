@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+
+<launch>
+    <arg name="mapping" default="false" />
+    <arg name="mouse_teleop" default="true" />
+    <arg name="gazebo_gui" default="true" />
+
+    <!-- Modo de mapeamento-->
+    <include if="$(arg mapping)" file="$(find trabalho)/launch/hector_mapping_teleop.launch" >
+        <arg name="mouse_teleop" value="$(arg mouse_teleop)" />
+        <arg name="gazebo_gui" value="$(arg gazebo_gui)" />
+    </include>
+
+
+    <!-- Modo de navegação -->
+    <include unless="$(arg mapping)" file="$(find trabalho)/launch/navigation.launch">
+        <arg name="gazebo_gui" value="$(arg gazebo_gui)" />
+        <arg name="mouse_teleop" value="$(arg mouse_teleop)" />
+    </include>
+
+</launch>
